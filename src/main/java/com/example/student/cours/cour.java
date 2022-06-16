@@ -17,6 +17,9 @@ class cours{
     public String getDescription(){
         return this.description;
     }
+    public Long getId(){
+        return this.id;
+    }
 
     public void setNom(String nom){
         this.nom = nom;
