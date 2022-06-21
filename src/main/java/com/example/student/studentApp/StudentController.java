@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping(path="api/v1/students")
@@ -19,15 +18,15 @@ public class StudentController {
     private final StudentServices stService;
 
 	@Autowired
-	public StudentController(StudentServices stService){
+	public StudentController(StudentServices stService) {
 		this.stService = stService;
 	}
-    @GetMapping
+	@GetMapping
 	public List<Student> getStudents(){
 		return this.stService.getStudents();
 	}
 	@GetMapping(path="/{idstud}")
-	public List <Student> getStudents(@PathVariable("idstud") Long id){
+	public Student getStudents(@PathVariable("idstud") Long id){
 		return this.stService.getStudentById(id);
 	}
 	@PostMapping
@@ -39,12 +38,13 @@ public class StudentController {
 		this.stService.deleteStudent(id);
 	}
 
-	@PutMapping(path = "/update/{stdid}")
-	public void updateStudent(
-		@PathVariable("stdId") Long stdId,
-		@RequestParam(required = false) String name,
-		@RequestParam(required = false) String email){
-			this.stService.updateStudent(stdId, name, email);
+	@PutMapping(path = "/update/{id}")
+	public String updateStudent(@PathVariable Long id,@RequestBody Student student){
+			if(id>0){
+				this.stService.updateEleve(id, student);
+				return "modifie avec succes"+id;
+			}
+			return "vyanse kabisa"+id;
 	}
-
+	
 }
