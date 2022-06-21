@@ -1,8 +1,10 @@
 package com.example.student.studentApp;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -35,16 +37,44 @@ public class StudentServices {
       }
       studentRepository.deleteById(id);
     }
-    public List<Student> getStudentById(Long id){
-      return studentRepository.findAllById(id);
+    public Student getStudentById(Long id){
+      return studentRepository.findStudentById(id);
     }
 
-    @Transactional
-    public void updateStudent(Long id,String name,String email){
+    public ResponseEntity<Student>updateEleve(Long id,Student std){
+      Optional<Student> studentData = studentRepository.findById(id);
+      if(studentData.isPresent()){
+        Student _Student = studentData.get();
+        if(std.getNom()!=null && std.getNom().length()>0 && !Objects.equals(_Student.getNom(), std.getNom())){
+          _Student.setNom(std.getNom());
+        }
+        if(std.getEmail()!=null && std.getEmail().length()>0 && !Objects.equals(_Student.getEmail(), std.getEmail())){
+          Optional<Student> studentOptional = studentRepository.findStudentByEmail(std.getEmail());
+          
+          if(studentOptional.isPresent()){
+            throw new IllegalStateException("email alread taken");
+          }else{
+            _Student.setEmail(std.getEmail());
+          }
+        }
+        if(std.getNais()!=null && !Objects.equals(_Student.getNais(), std.getNais())){
+          _Student.setNais(std.getNais());
+        }
+        return new ResponseEntity<>(studentRepository.save(_Student), HttpStatus.OK);
 
-      Student std = studentRepository.findStudentById(id).orElseThrow(
-        ()-> new IllegalStateException("student with id : "+id+" not exist")
-      );
+      }else{
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      }
+
+    }
+
+    //@Transactional
+    /*public void updateStudent(Long id,String name,String email){
+
+      Student std = studentRepository.findStudentById(id);
+      if(std!=null){
+       throw new IllegalStateException("student with id : "+id+" not exist");
+      }
       if(name!=null && name.length()>0 && !Objects.equals(name, std.getNom())){
         std.setNom(name);
       }
@@ -57,5 +87,5 @@ public class StudentServices {
         std.setEmail(email);
         
       }
-    }
+    }*/
 }
