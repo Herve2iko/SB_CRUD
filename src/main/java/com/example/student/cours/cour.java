@@ -1,11 +1,23 @@
 package com.example.student.cours;
 
-class cours{
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
+class cour{
+    @Id
+    @GeneratedValue
     private long id;
+
     private String nom;
     private String description;
 
-    public cours(long id, String nom,String descr){
+    
+    public cour() {
+    }
+
+    public cour(long id, String nom,String descr){
         this.id = id;
         this.nom = nom;
         this.description = descr;
