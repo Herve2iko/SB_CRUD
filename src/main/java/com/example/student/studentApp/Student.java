@@ -41,13 +41,21 @@ public class Student {
         this.nom = nom;
         this.email = email;
     }
+    
+    public long getId() {
+        return id;
+    }
     public String getNom(){
         return this.nom;
     }
     public String getEmail(){
         return this.email;
     }
+    
 
+    public void setNais(LocalDate nais) {
+        this.nais = nais;
+    }
     public void setNom(String nom){
         this.nom = nom;
     }
